@@ -14,9 +14,9 @@ namespace IllusionDragAndDrop.Koikatu
     [BepInPlugin("keelhauled.draganddrop", "Drag and Drop", "1.0.0")]
     class DragAndDrop : BaseUnityPlugin
     {
-        static readonly byte[] CharaToken = Encoding.UTF8.GetBytes("【KoiKatuChara】");
         static readonly byte[] StudioToken = Encoding.UTF8.GetBytes("【KStudio】");
-        static readonly byte[] SexToken = Encoding.UTF8.GetBytes("【sex】");
+        static readonly byte[] CharaToken = Encoding.UTF8.GetBytes("【KoiKatuChara】");
+        static readonly byte[] SexToken = Encoding.UTF8.GetBytes("sex");
         static readonly byte[] CoordinateToken = Encoding.UTF8.GetBytes("【KoiKatuClothes】");
         static readonly byte[] PoseToken = Encoding.UTF8.GetBytes("【pose】");
 
@@ -36,7 +36,8 @@ namespace IllusionDragAndDrop.Koikatu
 
         void OnFiles(List<string> aFiles, POINT aPos)
         {
-            var goodFiles = aFiles.Where(x => {
+            var goodFiles = aFiles.Where(x =>
+            {
                 var ext = Path.GetExtension(x).ToLower();
                 return ext == ".png" || ext == ".dat";
             }).ToList();
@@ -52,68 +53,32 @@ namespace IllusionDragAndDrop.Koikatu
             {
                 foreach(var file in goodFiles)
                 {
-                    var cardType = GetCardType(file);
+                    var bytes = File.ReadAllBytes(file);
 
-                    switch(cardType)
+                    if(BoyerMoore.ContainsSequence(bytes, StudioToken))
                     {
-                        case CardType.CharaFemale:
-                            cardHandler.Character_LoadFemale(file);
-                            break;
-
-                        case CardType.CharaMale:
-                            cardHandler.Character_LoadMale(file);
-                            break;
-
-                        case CardType.StudioScene:
-                            cardHandler.Scene_Load(file);
-                            break;
-
-                        case CardType.Coordinate:
-                            cardHandler.Coordinate_Load(file);
-                            break;
-
-                        case CardType.Unknown:
-                            Logger.Log(LogLevel.Message, "This file does not contain any koikatu related data");
-                            break;
+                        cardHandler.Scene_Load(file, aPos);
+                    }
+                    else if(BoyerMoore.ContainsSequence(bytes, CharaToken))
+                    {
+                        var index = new BoyerMoore(SexToken).Search(bytes).First();
+                        var sex = bytes[index + SexToken.Length];
+                        cardHandler.Character_Load(file, aPos, sex);
+                    }
+                    else if(BoyerMoore.ContainsSequence(bytes, CoordinateToken))
+                    {
+                        cardHandler.Coordinate_Load(file, aPos);
+                    }
+                    else if(BoyerMoore.ContainsSequence(bytes, PoseToken))
+                    {
+                        cardHandler.PoseData_Load(file, aPos);
+                    }
+                    else
+                    {
+                        Logger.Log(LogLevel.Message, "This file does not contain any koikatu related data");
                     }
                 }
             }
-        }
-
-        CardType GetCardType(string path)
-        {
-            var bytes = File.ReadAllBytes(path);
-
-            if(BoyerMoore.ContainsSequence(bytes, StudioToken))
-            {
-                return CardType.StudioScene;
-            }
-            else if(BoyerMoore.ContainsSequence(bytes, CharaToken))
-            {
-                var index = new BoyerMoore(SexToken).Search(bytes).First();
-                var sex = bytes[index + SexToken.Length];
-                return sex == 1 ? CardType.CharaFemale : CardType.CharaMale;
-            }
-            else if(BoyerMoore.ContainsSequence(bytes, CoordinateToken))
-            {
-                return CardType.Coordinate;
-            }
-            else if(BoyerMoore.ContainsSequence(bytes, PoseToken))
-            {
-                return CardType.Pose;
-            }
-
-            return CardType.Unknown;
-        }
-
-        enum CardType
-        {
-            Unknown,
-            CharaFemale,
-            CharaMale,
-            StudioScene,
-            Coordinate,
-            Pose
         }
     }
 }

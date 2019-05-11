@@ -1,7 +1,8 @@
-﻿using System;
+﻿using B83.Win32;
+using BepInEx.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using BepInEx.Logging;
 using Logger = BepInEx.Logger;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
@@ -22,7 +23,7 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
                     handler = (CardHandlerMain)Activator.CreateInstance(type);
                     cardHandlers.Add(type, handler);
                 }
-                
+
                 if(handler.Condition)
                     return handler;
             }
@@ -33,11 +34,10 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
 
         public virtual bool Condition => throw new NotImplementedException();
 
-        public virtual void Scene_Load(string path) { }
-        public virtual void Scene_Import(string path) { }
-        public virtual void Character_LoadFemale(string path) { }
-        public virtual void Character_LoadMale(string path) { }
-        public virtual void Coordinate_Load(string path) { }
-        public virtual void PoseData_Load(string path) { }
+        public virtual void Scene_Load(string path, POINT pos) { }
+        public virtual void Scene_Import(string path, POINT pos) { }
+        public virtual void Character_Load(string path, POINT pos, byte sex) { }
+        public virtual void Coordinate_Load(string path, POINT pos) { }
+        public virtual void PoseData_Load(string path, POINT pos) { }
     }
 }
