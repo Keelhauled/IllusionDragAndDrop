@@ -1,11 +1,12 @@
 ﻿using B83.Win32;
-using BepInEx.Logging;
 using Harmony;
 using Manager;
 using Studio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using BepInEx.Logging;
 using Logger = BepInEx.Logger;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
@@ -16,20 +17,17 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
 
         public override void Scene_Load(string path, POINT pos)
         {
-            Logger.Log(LogLevel.Message, "Loading scene");
-            Studio.Studio.Instance.StartCoroutine(Studio.Studio.Instance.LoadSceneCoroutine(path));
+            var studio = Studio.Studio.Instance;
+            studio.StartCoroutine(studio.LoadSceneCoroutine(path));
         }
 
         public override void Scene_Import(string path, POINT pos)
         {
-            Logger.Log(LogLevel.Message, "Importing scene");
             Studio.Studio.Instance.ImportScene(path);
         }
 
         public override void Character_Load(string path, POINT pos, byte sex)
         {
-            Logger.Log(LogLevel.Message, "Loading character");
-
             var characters = GetSelectedCharacters();
             if(characters.Count > 0)
             {
@@ -53,12 +51,31 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
 
         public override void Coordinate_Load(string path, POINT pos)
         {
-            Logger.Log(LogLevel.Message, "Loading coordinate");
+            var characters = GetSelectedCharacters();
+            if(characters.Count > 0)
+            {
+                foreach(var chara in characters)
+                    chara.LoadClothesFile(path);
+
+                UpdateStateInfo();
+            }
         }
 
         public override void PoseData_Load(string path, POINT pos)
         {
-            Logger.Log(LogLevel.Message, "Loading pose");
+            try
+            {
+                var characters = GetSelectedCharacters();
+                if(characters.Count > 0)
+                {
+                    foreach(var chara in characters)
+                        PauseCtrl.Load(chara, path);
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.Log(LogLevel.Error, ex);
+            }
         }
 
         List<OCIChar> GetSelectedCharacters()

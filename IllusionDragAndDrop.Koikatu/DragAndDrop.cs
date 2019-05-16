@@ -40,9 +40,9 @@ namespace IllusionDragAndDrop.Koikatu
             {
                 var ext = Path.GetExtension(x).ToLower();
                 return ext == ".png" || ext == ".dat";
-            }).ToList();
+            });
 
-            if(goodFiles.Count == 0)
+            if(goodFiles.Count() == 0)
             {
                 Logger.Log(LogLevel.Message, "No files to handle");
                 return;

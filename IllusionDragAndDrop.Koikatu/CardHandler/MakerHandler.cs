@@ -1,12 +1,10 @@
 ﻿using B83.Win32;
-using BepInEx.Logging;
 using ChaCustom;
 using Harmony;
 using Manager;
 using System;
 using System.Linq;
 using UnityEngine;
-using Logger = BepInEx.Logger;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
 {
@@ -16,8 +14,6 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
 
         public override void Character_Load(string path, POINT pos, byte sex)
         {
-            Logger.Log(LogLevel.Message, "Loading character");
-
             var customCharaFile = GameObject.FindObjectOfType<CustomCharaFile>();
             var traverse = Traverse.Create(customCharaFile);
             var fileWindow = traverse.Field("fileWindow").GetValue<CustomFileWindow>();
@@ -34,8 +30,6 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
 
         public override void Coordinate_Load(string path, POINT pos)
         {
-            Logger.Log(LogLevel.Message, "Loading coordinate");
-
             var customCoordinateFile = GameObject.FindObjectOfType<CustomCoordinateFile>();
             var traverse = Traverse.Create(customCoordinateFile);
             var fileWindow = traverse.Field("fileWindow").GetValue<CustomFileWindow>();
