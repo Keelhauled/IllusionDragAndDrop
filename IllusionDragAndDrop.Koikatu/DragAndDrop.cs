@@ -11,9 +11,11 @@ using Logger = BepInEx.Logger;
 
 namespace IllusionDragAndDrop.Koikatu
 {
-    [BepInPlugin("keelhauled.draganddrop", "Drag and Drop", "1.0.0")]
+    [BepInPlugin("keelhauled.draganddrop", "Illusion Drag & Drop", Version)]
     class DragAndDrop : BaseUnityPlugin
     {
+        public const string Version = "1.0.0";
+
         static readonly byte[] StudioToken = Encoding.UTF8.GetBytes("【KStudio】");
         static readonly byte[] CharaToken = Encoding.UTF8.GetBytes("【KoiKatuChara】");
         static readonly byte[] SexToken = Encoding.UTF8.GetBytes("sex");
