@@ -26,6 +26,9 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
             fileWindow.btnChaLoadLoad.onClick.Invoke();
             listCtrl.RemoveList(index);
             listCtrl.Create(customCharaFile.OnChangeSelect);
+
+            var customBase = CustomBase.Instance;
+            customBase.chaCtrl.chaFile.parameter.sex = (byte)customBase.modeSex;
         }
 
         public override void Coordinate_Load(string path, POINT pos)
