@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
 {
-    public class FreeHSelectHandler : CardHandlerMain
+    public class FreeHSelectHandler : CardHandlerMethods
     {
         const string NormalMaleCanvas = "FreeHScene/Canvas/Panel/Normal/MaleCard";
         const string NormalFemaleCanvas = "FreeHScene/Canvas/Panel/Normal/FemaleCard";

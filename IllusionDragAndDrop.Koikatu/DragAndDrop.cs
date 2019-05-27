@@ -14,7 +14,7 @@ namespace IllusionDragAndDrop.Koikatu
     [BepInPlugin("keelhauled.draganddrop", "Illusion Drag & Drop", Version)]
     class DragAndDrop : BaseUnityPlugin
     {
-        public const string Version = "1.0.0";
+        public const string Version = "1.0.1";
 
         static readonly byte[] StudioToken = Encoding.UTF8.GetBytes("【KStudio】");
         static readonly byte[] CharaToken = Encoding.UTF8.GetBytes("【KoiKatuChara】");
@@ -50,7 +50,7 @@ namespace IllusionDragAndDrop.Koikatu
                 return;
             }
 
-            var cardHandler = CardHandlerMain.GetActiveCardHandler();
+            var cardHandler = CardHandlerMethods.GetActiveCardHandler();
             if(cardHandler != null)
             {
                 foreach(var file in goodFiles)

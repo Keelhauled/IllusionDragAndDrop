@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
 {
-    public class MakerHandler : CardHandlerMain
+    public class MakerHandler : CardHandlerMethods
     {
         public override bool Condition => Scene.Instance && Scene.Instance.NowSceneNames.Any(x => x == "CustomScene");
 

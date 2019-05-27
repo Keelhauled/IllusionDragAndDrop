@@ -11,7 +11,7 @@ using Logger = BepInEx.Logger;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
 {
-    public class StudioHandler : CardHandlerMain
+    public class StudioHandler : CardHandlerMethods
     {
         public override bool Condition => Scene.Instance && Scene.Instance.NowSceneNames.Any(x => x == "Studio");
 
