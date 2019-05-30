@@ -14,6 +14,8 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
         const string ThreesomeMaleCanvas = "FreeHScene/Canvas/Panel/3P/MaleCard";
         const string ThreesomeFemaleCanvas = "FreeHScene/Canvas/Panel/3P/FemaleCard";
         const string Stage1Canvas = "FreeHScene/Canvas/Panel/3P/Stage1";
+        const string DarknessMaleCanvas = "FreeHScene/Canvas/Panel/Dark/MaleCard";
+        const string DarknessFemaleCanvas = "FreeHScene/Canvas/Panel/Dark/FemaleCard";
 
         public override bool Condition => GameObject.FindObjectOfType<FreeHScene>() && !GameObject.FindObjectOfType<FreeHCharaSelect>();
 
@@ -44,6 +46,12 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
                 else
                     SetupCharacter(path, ResultType.Partner);
             }
+
+            else if(ActiveAndInBounds(DarknessMaleCanvas, pos))
+                SetupCharacter(path, ResultType.Player);
+
+            else if(ActiveAndInBounds(DarknessFemaleCanvas, pos))
+                SetupCharacter(path, ResultType.Heroine);
         }
 
         bool ActiveAndInBounds(string gameObjectPath, POINT pos)

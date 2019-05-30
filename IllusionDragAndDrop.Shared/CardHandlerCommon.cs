@@ -8,7 +8,7 @@ namespace IllusionDragAndDrop.Shared
 {
     public abstract class CardHandlerCommon<T> where T : CardHandlerCommon<T>
     {
-        static Dictionary<Type, T> CardHandlers = new Dictionary<Type, T>();
+        static Dictionary<Type, T> cardHandlers = new Dictionary<Type, T>();
         public abstract bool Condition { get; }
 
         public static T GetActiveCardHandler()
@@ -18,10 +18,10 @@ namespace IllusionDragAndDrop.Shared
 
             foreach(var type in inheritingTypes)
             {
-                if(!CardHandlers.TryGetValue(type, out var handler))
+                if(!cardHandlers.TryGetValue(type, out var handler))
                 {
                     handler = (T)Activator.CreateInstance(type);
-                    CardHandlers.Add(type, handler);
+                    cardHandlers.Add(type, handler);
                 }
 
                 if(handler.Condition)
@@ -29,7 +29,7 @@ namespace IllusionDragAndDrop.Shared
             }
 
             Logger.Log(LogLevel.Message, "No handler found for this scene");
-            return default(T);
+            return null;
         }
     }
 }
