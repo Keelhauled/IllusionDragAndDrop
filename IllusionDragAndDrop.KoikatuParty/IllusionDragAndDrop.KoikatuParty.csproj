@@ -4,17 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2B68BB81-821E-45B4-B89C-3AC907D1881E}</ProjectGuid>
+    <ProjectGuid>{A1866225-CD38-47CB-B5CC-62A0F03A13B6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IllusionDragAndDrop.Koikatu</RootNamespace>
-    <AssemblyName>IllusionDragAndDrop.Koikatu</AssemblyName>
+    <RootNamespace>IllusionDragAndDrop.KoikatuParty</RootNamespace>
+    <AssemblyName>IllusionDragAndDrop.KoikatuParty</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>false</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\..\Games\Koikatu\BepInEx\scripts\</OutputPath>
@@ -36,20 +36,14 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\libs\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>.\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>..\libs\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="System" />
     <Reference Include="UnityEngine">
       <HintPath>..\libs\UnityEngine.dll</HintPath>
       <Private>False</Private>
@@ -60,13 +54,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CardHandler\CardHandlerMethods.cs" />
-    <Compile Include="CardHandler\FreeHSelectHandler.cs" />
-    <Compile Include="CardHandler\MakerHandler.cs" />
-    <Compile Include="CardHandler\StudioHandler.cs" />
-    <Compile Include="DragAndDrop.cs" />
+    <Compile Include="DragAndDropPartyFix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <Import Project="..\IllusionDragAndDrop.Shared\IllusionDragAndDrop.Shared.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\IllusionDragAndDrop.Koikatu\IllusionDragAndDrop.Koikatu.csproj">
+      <Project>{2b68bb81-821e-45b4-b89c-3ac907d1881e}</Project>
+      <Name>IllusionDragAndDrop.Koikatu</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

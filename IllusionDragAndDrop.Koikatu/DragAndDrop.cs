@@ -8,12 +8,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Logger = BepInEx.Logger;
+using UniRx;
 
 namespace IllusionDragAndDrop.Koikatu
 {
-    [BepInPlugin("keelhauled.draganddrop", "Illusion Drag & Drop", Version)]
-    class DragAndDrop : BaseUnityPlugin
+    [BepInPlugin(GUID, "Illusion Drag & Drop", Version)]
+    public class DragAndDrop : BaseUnityPlugin
     {
+        public const string GUID = "keelhauled.draganddrop";
         public const string Version = "1.0.1";
 
         static readonly byte[] StudioToken = Encoding.UTF8.GetBytes("【KStudio】");
@@ -28,7 +30,7 @@ namespace IllusionDragAndDrop.Koikatu
         {
             hook = new UnityDragAndDropHook();
             hook.InstallHook();
-            hook.OnDroppedFiles += OnFiles;
+            hook.OnDroppedFiles += (aFiles, aPos) => MainThreadDispatcher.Post((x) => OnFiles(aFiles, aPos), null);
         }
 
         void OnDisable()

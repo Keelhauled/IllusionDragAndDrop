@@ -2,16 +2,24 @@
 using BepInEx;
 using ChaCustom;
 using Harmony;
+using IllusionDragAndDrop.Koikatu.CardHandler;
 using Manager;
 using System;
 using System.Linq;
 using UnityEngine;
 
-namespace IllusionDragAndDrop.Koikatu.CardHandler
+namespace IllusionDragAndDrop.KoikatuParty
 {
-    public class MakerHandler : CardHandlerMethods
+    [BepInPlugin("keelhauled.draganddroppartyfix", "Illusion Drag & Drop Partyfix", Version)]
+    public class DragAndDropPartyFix : BaseUnityPlugin
     {
-        public override bool Condition => Scene.Instance && Scene.Instance.NowSceneNames.Any(x => x == "CustomScene") && Paths.ProcessName == "Koikatu";
+        public const string Version = "1.0.0";
+        public const string Process = "Koikatsu Party";
+    }
+
+    public class MakerHandlerParty : CardHandlerMethods
+    {
+        public override bool Condition => Scene.Instance && Scene.Instance.NowSceneNames.Any(x => x == "CustomScene") && Paths.ProcessName == DragAndDropPartyFix.Process;
 
         public override void Character_Load(string path, POINT pos, byte sex)
         {
@@ -21,7 +29,7 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
             var listCtrl = traverse.Field("listCtrl").GetValue<CustomFileListCtrl>();
 
             var index = listCtrl.GetInclusiveCount() + 1;
-            listCtrl.AddList(index, "", "", "", path, "", new DateTime());
+            listCtrl.AddList(new CustomFileInfo(new FolderAssist.FileInfo(path, "", new DateTime())) { index = index, name = "" });
             listCtrl.Create(customCharaFile.OnChangeSelect);
             listCtrl.SelectItem(index);
             fileWindow.btnChaLoadLoad.onClick.Invoke();
@@ -40,7 +48,7 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
             var listCtrl = traverse.Field("listCtrl").GetValue<CustomFileListCtrl>();
 
             var index = listCtrl.GetInclusiveCount() + 1;
-            listCtrl.AddList(index, "", "", "", path, "", new DateTime());
+            listCtrl.AddList(new CustomFileInfo(new FolderAssist.FileInfo(path, "", new DateTime())) { index = index, name = "" });
             listCtrl.Create(customCoordinateFile.OnChangeSelect);
             listCtrl.SelectItem(index);
             fileWindow.btnCoordeLoadLoad.onClick.Invoke();

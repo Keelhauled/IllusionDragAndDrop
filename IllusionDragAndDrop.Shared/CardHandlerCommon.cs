@@ -9,12 +9,22 @@ namespace IllusionDragAndDrop.Shared
     public abstract class CardHandlerCommon<T> where T : CardHandlerCommon<T>
     {
         static Dictionary<Type, T> cardHandlers = new Dictionary<Type, T>();
+        
+        /// <summary>
+        /// This has to be completely unique, the first Condition property to return true will be picked
+        /// </summary>
         public abstract bool Condition { get; }
 
         public static T GetActiveCardHandler()
         {
+            foreach(var handler in cardHandlers.Values)
+            {
+                if(handler.Condition)
+                    return handler;
+            }
+
             var mainType = typeof(T);
-            var inheritingTypes = mainType.Assembly.GetTypes().Where(x => x.IsSubclassOf(mainType));
+            var inheritingTypes = AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetTypes()).SelectMany(x => x).Where(x => x.IsSubclassOf(mainType));
 
             foreach(var type in inheritingTypes)
             {
