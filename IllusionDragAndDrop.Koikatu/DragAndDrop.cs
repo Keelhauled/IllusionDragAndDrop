@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Logger = BepInEx.Logger;
 using UniRx;
+using Logger = BepInEx.Logger;
 
 namespace IllusionDragAndDrop.Koikatu
 {
@@ -16,12 +16,12 @@ namespace IllusionDragAndDrop.Koikatu
     public class DragAndDrop : BaseUnityPlugin
     {
         public const string GUID = "keelhauled.draganddrop";
-        public const string Version = "1.0.1";
+        public const string Version = "1.1.0";
 
         static readonly byte[] StudioToken = Encoding.UTF8.GetBytes("【KStudio】");
-        static readonly byte[] CharaToken = Encoding.UTF8.GetBytes("【KoiKatuChara】");
+        static readonly byte[] CharaToken = Encoding.UTF8.GetBytes("【KoiKatuChara");
         static readonly byte[] SexToken = Encoding.UTF8.GetBytes("sex");
-        static readonly byte[] CoordinateToken = Encoding.UTF8.GetBytes("【KoiKatuClothes】");
+        static readonly byte[] CoordinateToken = Encoding.UTF8.GetBytes("【KoiKatuClothes");
         static readonly byte[] PoseToken = Encoding.UTF8.GetBytes("【pose】");
 
         UnityDragAndDropHook hook;
