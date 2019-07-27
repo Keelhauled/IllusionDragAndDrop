@@ -1,11 +1,11 @@
-﻿using B83.Win32;
-using BepInEx;
+﻿using BepInEx;
 using ChaCustom;
 using Harmony;
 using Manager;
 using System;
 using System.Linq;
 using UnityEngine;
+using IllusionDragAndDrop.Shared.WinAPI;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
 {

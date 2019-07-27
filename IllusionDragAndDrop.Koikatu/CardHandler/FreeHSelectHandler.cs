@@ -1,6 +1,6 @@
-﻿using B83.Win32;
-using Harmony;
+﻿using Harmony;
 using UnityEngine;
+using IllusionDragAndDrop.Shared.WinAPI;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
 {

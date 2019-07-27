@@ -1,5 +1,4 @@
-﻿using B83.Win32;
-using Harmony;
+﻿using Harmony;
 using Manager;
 using Studio;
 using System;
@@ -8,6 +7,7 @@ using System.Linq;
 using UnityEngine;
 using BepInEx.Logging;
 using Logger = BepInEx.Logger;
+using IllusionDragAndDrop.Shared.WinAPI;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
 {

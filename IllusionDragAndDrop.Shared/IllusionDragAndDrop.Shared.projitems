@@ -9,8 +9,15 @@
     <Import_RootNamespace>IllusionDragAndDrop.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)B83.Win32.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinAPI\DragEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinAPI\DropTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinAPI\IDataObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinAPI\IDropTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinAPI\IOleDropTarget.cs" />
+    <None Include="$(MSBuildThisFileDirectory)B83.Win32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoyerMoore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CardHandlerCommon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UnityOleDropHook.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinAPI\WinAPI.cs" />
   </ItemGroup>
 </Project>

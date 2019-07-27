@@ -1,5 +1,5 @@
-﻿using B83.Win32;
-using IllusionDragAndDrop.Shared;
+﻿using IllusionDragAndDrop.Shared;
+using IllusionDragAndDrop.Shared.WinAPI;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
 {

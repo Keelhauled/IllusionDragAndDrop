@@ -378,6 +378,9 @@ namespace B83.Win32
             int count = GetWindowText(hWnd, sb, length);
             return sb.ToString(0, count);
         }
+
+        [DllImport("user32", ExactSpelling = true, SetLastError = true)]
+        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref POINT pt, [MarshalAs(UnmanagedType.U4)] int cPoints);
     }
 
     public static class WinAPI
@@ -449,6 +452,11 @@ namespace B83.Win32
 
         private IntPtr Callback(int code, IntPtr wParam, ref MSG lParam)
         {
+            if(code != 0)
+            {
+                try { throw new ArithmeticException(); } catch { }
+            }
+
             if(code == 0 && lParam.message == WM.DROPFILES)
             {
                 WinAPI.DragQueryPoint(lParam.wParam, out POINT pos);
@@ -467,6 +475,21 @@ namespace B83.Win32
                 WinAPI.DragFinish(lParam.wParam);
                 OnDroppedFiles?.Invoke(result, pos);
             }
+            else if(code == 0 && lParam.message == WM.MOUSEFIRST)
+            {
+                //uint n = WinAPI.DragQueryFile(lParam.wParam, 0xFFFFFFFF, null, 0);
+                //Console.WriteLine(n);
+
+                //var point = new POINT(lParam.pt.x, lParam.pt.y);
+                //Window.MapWindowPoints(IntPtr.Zero, mainWindow, ref point, 1);
+                //Console.WriteLine(point);
+            }
+            else
+            {
+                Console.WriteLine(lParam.message);
+                //try { throw new ArithmeticException(); } catch { }
+            }
+
             return WinAPI.CallNextHookEx(m_Hook, code, wParam, ref lParam);
         }
     }

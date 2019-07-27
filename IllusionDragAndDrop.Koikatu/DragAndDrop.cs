@@ -1,8 +1,8 @@
-﻿using B83.Win32;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Logging;
 using IllusionDragAndDrop.Koikatu.CardHandler;
 using IllusionDragAndDrop.Shared;
+using IllusionDragAndDrop.Shared.WinAPI;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,21 +21,21 @@ namespace IllusionDragAndDrop.Koikatu
         static readonly byte[] StudioToken = Encoding.UTF8.GetBytes("【KStudio】");
         static readonly byte[] CharaToken = Encoding.UTF8.GetBytes("【KoiKatuChara");
         static readonly byte[] SexToken = Encoding.UTF8.GetBytes("sex");
-        static readonly byte[] CoordinateToken = Encoding.UTF8.GetBytes("【KoiKatuClothes");
+        static readonly byte[] CoordinateToken = Encoding.UTF8.GetBytes("【KoiKatuClothes】");
         static readonly byte[] PoseToken = Encoding.UTF8.GetBytes("【pose】");
 
-        UnityDragAndDropHook hook;
+        UnityOleDropHook hook;
 
         void OnEnable()
         {
-            hook = new UnityDragAndDropHook();
-            hook.InstallHook();
+            hook = new UnityOleDropHook();
+            hook.RegisterDragDrop();
             hook.OnDroppedFiles += (aFiles, aPos) => MainThreadDispatcher.Post((x) => OnFiles(aFiles, aPos), null);
         }
 
         void OnDisable()
         {
-            hook.UninstallHook();
+            hook.RevokeDragDrop();
         }
 
         void OnFiles(List<string> aFiles, POINT aPos)
