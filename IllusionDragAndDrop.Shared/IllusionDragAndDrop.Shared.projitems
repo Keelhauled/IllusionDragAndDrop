@@ -9,8 +9,9 @@
     <Import_RootNamespace>IllusionDragAndDrop.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)B83.Win32.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoyerMoore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CardHandlerCommon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DragDropWndProc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinAPI.cs" />
   </ItemGroup>
 </Project>

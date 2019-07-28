@@ -1,5 +1,5 @@
-﻿using B83.Win32;
-using Harmony;
+﻿using Harmony;
+using IllusionDragAndDrop.Shared;
 using UnityEngine;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
@@ -19,7 +19,7 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
 
         public override bool Condition => GameObject.FindObjectOfType<FreeHScene>() && !GameObject.FindObjectOfType<FreeHCharaSelect>();
 
-        public override void Character_Load(string path, POINT pos, byte sex)
+        public override void Character_Load(string path, WinAPI.POINT pos, byte sex)
         {
             if(ActiveAndInBounds(NormalMaleCanvas, pos))
                 SetupCharacter(path, ResultType.Player);
@@ -54,7 +54,7 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
                 SetupCharacter(path, ResultType.Heroine);
         }
 
-        bool ActiveAndInBounds(string gameObjectPath, POINT pos)
+        bool ActiveAndInBounds(string gameObjectPath, WinAPI.POINT pos)
         {
             var gameObject = GameObject.Find(gameObjectPath);
 

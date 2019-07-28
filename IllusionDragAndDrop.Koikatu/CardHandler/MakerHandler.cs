@@ -1,7 +1,7 @@
-﻿using B83.Win32;
-using BepInEx;
+﻿using BepInEx;
 using ChaCustom;
 using Harmony;
+using IllusionDragAndDrop.Shared;
 using Manager;
 using System;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
     {
         public override bool Condition => Scene.Instance && Scene.Instance.NowSceneNames.Any(x => x == "CustomScene") && Paths.ProcessName == "Koikatu";
 
-        public override void Character_Load(string path, POINT pos, byte sex)
+        public override void Character_Load(string path, WinAPI.POINT pos, byte sex)
         {
             var customCharaFile = GameObject.FindObjectOfType<CustomCharaFile>();
             var traverse = Traverse.Create(customCharaFile);
@@ -32,7 +32,7 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
             customBase.chaCtrl.chaFile.parameter.sex = (byte)customBase.modeSex;
         }
 
-        public override void Coordinate_Load(string path, POINT pos)
+        public override void Coordinate_Load(string path, WinAPI.POINT pos)
         {
             var customCoordinateFile = GameObject.FindObjectOfType<CustomCoordinateFile>();
             var traverse = Traverse.Create(customCoordinateFile);

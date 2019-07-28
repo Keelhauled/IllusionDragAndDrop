@@ -1,5 +1,4 @@
-﻿using B83.Win32;
-using Harmony;
+﻿using Harmony;
 using Manager;
 using Studio;
 using System;
@@ -8,6 +7,7 @@ using System.Linq;
 using UnityEngine;
 using BepInEx.Logging;
 using Logger = BepInEx.Logger;
+using IllusionDragAndDrop.Shared;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
 {
@@ -15,18 +15,18 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
     {
         public override bool Condition => Scene.Instance && Scene.Instance.NowSceneNames.Any(x => x == "Studio");
 
-        public override void Scene_Load(string path, POINT pos)
+        public override void Scene_Load(string path, WinAPI.POINT pos)
         {
             var studio = Studio.Studio.Instance;
             studio.StartCoroutine(studio.LoadSceneCoroutine(path));
         }
 
-        public override void Scene_Import(string path, POINT pos)
+        public override void Scene_Import(string path, WinAPI.POINT pos)
         {
             Studio.Studio.Instance.ImportScene(path);
         }
 
-        public override void Character_Load(string path, POINT pos, byte sex)
+        public override void Character_Load(string path, WinAPI.POINT pos, byte sex)
         {
             var characters = GetSelectedCharacters();
             if(characters.Count > 0)
@@ -49,7 +49,7 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
             }
         }
 
-        public override void Coordinate_Load(string path, POINT pos)
+        public override void Coordinate_Load(string path, WinAPI.POINT pos)
         {
             var characters = GetSelectedCharacters();
             if(characters.Count > 0)
@@ -61,7 +61,7 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
             }
         }
 
-        public override void PoseData_Load(string path, POINT pos)
+        public override void PoseData_Load(string path, WinAPI.POINT pos)
         {
             try
             {

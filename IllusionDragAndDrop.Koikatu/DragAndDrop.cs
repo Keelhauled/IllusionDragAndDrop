@@ -1,5 +1,4 @@
-﻿using B83.Win32;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Logging;
 using IllusionDragAndDrop.Koikatu.CardHandler;
 using IllusionDragAndDrop.Shared;
@@ -24,13 +23,14 @@ namespace IllusionDragAndDrop.Koikatu
         static readonly byte[] CoordinateToken = Encoding.UTF8.GetBytes("【KoiKatuClothes");
         static readonly byte[] PoseToken = Encoding.UTF8.GetBytes("【pose】");
 
-        UnityDragAndDropHook hook;
+        DragDropWndProc hook;
 
         void OnEnable()
         {
-            hook = new UnityDragAndDropHook();
+            hook = new DragDropWndProc();
             hook.InstallHook();
-            hook.OnDroppedFiles += (aFiles, aPos) => MainThreadDispatcher.Post((x) => OnFiles(aFiles, aPos), null);
+            hook.OnDragDrop += (aFiles, aPos) => MainThreadDispatcher.Post((x) => OnFiles(aFiles, aPos), null);
+            hook.OnDragHover += (aPos) => MainThreadDispatcher.Post((x) => OnHover(aPos), null);
         }
 
         void OnDisable()
@@ -38,7 +38,12 @@ namespace IllusionDragAndDrop.Koikatu
             hook.UninstallHook();
         }
 
-        void OnFiles(List<string> aFiles, POINT aPos)
+        void OnHover(WinAPI.POINT aPos)
+        {
+
+        }
+
+        void OnFiles(List<string> aFiles, WinAPI.POINT aPos)
         {
             var goodFiles = aFiles.Where(x =>
             {
