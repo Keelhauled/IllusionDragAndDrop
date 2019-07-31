@@ -6,7 +6,7 @@ namespace IllusionDragAndDrop.Shared
 {
     public class DragDropWndProc
     {
-        public delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+        public delegate IntPtr WndProcDelegate(IntPtr hWnd, WinAPI.WM msg, IntPtr wParam, IntPtr lParam);
         WndProcDelegate newWndProc;
 
         public delegate void DragDropEvent(List<string> aPathNames, WinAPI.POINT aDropPoint);
@@ -20,6 +20,11 @@ namespace IllusionDragAndDrop.Shared
         IntPtr newWndProcPtr;
         bool hooked = false;
 
+        IntPtr mouseHook;
+        WinAPI.LowLevelMouseProc mouseCallback;
+        bool mouseDown = false;
+        IntPtr activeDragWindow;
+
         public DragDropWndProc()
         {
             hMainWindow = WinAPI.GetForegroundWindow();
@@ -29,13 +34,18 @@ namespace IllusionDragAndDrop.Shared
         {
             if(!hooked)
             {
-                newWndProc = new WndProcDelegate(wndProc);
+                newWndProc = new WndProcDelegate(WndProc);
                 newWndProcPtr = Marshal.GetFunctionPointerForDelegate(newWndProc);
                 oldWndProcPtr = WinAPI.SetWindowLongPtr(hMainWindow, -4, newWndProcPtr);
                 WinAPI.DragAcceptFiles(hMainWindow, true);
-                hooked = true;
+
+                mouseCallback = MouseCallback;
+                var hModule = WinAPI.GetModuleHandle(null);
+                mouseHook = WinAPI.SetWindowsHookEx(WinAPI.HookType.WH_MOUSE_LL, mouseCallback, hModule, 0);
+                Console.WriteLine($"Mouse hook = {mouseHook}");
 
                 Console.WriteLine("Installing hooks");
+                hooked = true;
             }
         }
 
@@ -48,17 +58,18 @@ namespace IllusionDragAndDrop.Shared
                 oldWndProcPtr = IntPtr.Zero;
                 newWndProcPtr = IntPtr.Zero;
                 newWndProc = null;
-                hooked = false;
+
+                WinAPI.UnhookWindowsHookEx(mouseHook);
+                mouseHook = IntPtr.Zero;
 
                 Console.WriteLine("Uninstalling hooks");
+                hooked = false;
             }
         }
 
-        IntPtr wndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        IntPtr WndProc(IntPtr hWnd, WinAPI.WM msg, IntPtr wParam, IntPtr lParam)
         {
-            var message = (WinAPI.WM)msg;
-
-            if(message == WinAPI.WM.DROPFILES)
+            if(msg == WinAPI.WM.DROPFILES)
             {
                 Console.WriteLine("Dropping files");
 
@@ -78,21 +89,40 @@ namespace IllusionDragAndDrop.Shared
                 WinAPI.DragFinish(wParam);
                 OnDragDrop?.Invoke(result, pos);
             }
-            else if(message == WinAPI.WM.NCHITTEST)
+            else if(msg == WinAPI.WM.NCHITTEST)
             {
-                if(WinAPI.IsKeyPushedDown(WinAPI.VK.LBUTTON) || WinAPI.IsKeyPushedDown(WinAPI.VK.RBUTTON))
+                if(mouseDown && hMainWindow != activeDragWindow)
                 {
-                    if(WinAPI.GetActiveWindow() != hMainWindow)
-                    {
-                        var point = new WinAPI.POINT();
-                        WinAPI.GetCursorPos(ref point);
-                        WinAPI.MapWindowPoints(IntPtr.Zero, hMainWindow, ref point, 1);
-                        OnDragHover?.Invoke(point);
-                    }
+                    var point = new WinAPI.POINT();
+                    WinAPI.GetCursorPos(ref point);
+                    WinAPI.MapWindowPoints(IntPtr.Zero, hMainWindow, ref point, 1);
+                    OnDragHover?.Invoke(point);
+                    Console.WriteLine(point);
                 }
             }
 
             return WinAPI.CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
+        }
+
+        IntPtr MouseCallback(int nCode, WinAPI.WM wParam, IntPtr lParam)
+        {
+            //if(wParam != WinAPI.WM.MOUSEFIRST)
+            //{
+            //    if(wParam == WinAPI.WM.LBUTTONDOWN)
+            //    {
+            //        activeDragWindow = WinAPI.GetActiveWindow();
+            //        mouseDown = true;
+            //        Console.WriteLine("LBUTTONDOWN");
+            //    }
+            //    else if(wParam == WinAPI.WM.LBUTTONUP)
+            //    {
+            //        activeDragWindow = IntPtr.Zero;
+            //        mouseDown = false;
+            //        Console.WriteLine("LBUTTONUP");
+            //    } 
+            //}
+
+            return WinAPI.CallNextHookEx(mouseHook, nCode, wParam, lParam);
         }
     }
 }

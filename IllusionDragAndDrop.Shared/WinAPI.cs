@@ -9,9 +9,13 @@ namespace IllusionDragAndDrop.Shared
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         public static extern IntPtr GetForegroundWindow();
         [DllImport("user32.dll")]
+        public static extern IntPtr GetFocus();
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetActiveWindow();
+        [DllImport("user32.dll")]
         public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
         [DllImport("user32.dll")]
-        public static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        public static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, WM Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("shell32.dll")]
         public static extern void DragAcceptFiles(IntPtr hwnd, bool fAccept);
@@ -24,7 +28,6 @@ namespace IllusionDragAndDrop.Shared
 
         [DllImport("user32.dll")]
         public static extern bool GetCursorPos(ref POINT lpPoint);
-
         [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
         public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref POINT pt, [MarshalAs(UnmanagedType.U4)] int cPoints);
 
@@ -32,11 +35,16 @@ namespace IllusionDragAndDrop.Shared
         private static extern short GetAsyncKeyState(int vKey);
         public static bool IsKeyPushedDown(VK vKey) => 0 != (GetAsyncKeyState((int)vKey) & 0x8000);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr SetWindowsHookEx(HookType idHook, LowLevelMouseProc lpfn, IntPtr hMod, uint dwThreadId);
+        public delegate IntPtr LowLevelMouseProc(int code, WM wParam, [In] MSLLHOOKSTRUCT lParam);
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool UnhookWindowsHookEx(IntPtr hhk);
         [DllImport("user32.dll")]
-        public static extern IntPtr GetFocus();
+        public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, WM wParam, MSLLHOOKSTRUCT lParam);
 
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetActiveWindow();
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr GetModuleHandle(string lpModuleName);
 
         public enum HookType : int
         {
@@ -55,6 +63,16 @@ namespace IllusionDragAndDrop.Shared
             WH_CALLWNDPROCRET = 12,
             WH_KEYBOARD_LL = 13,
             WH_MOUSE_LL = 14
+        }
+
+        enum MouseMessages
+        {
+            WM_LBUTTONDOWN = 0x0201,
+            WM_LBUTTONUP = 0x0202,
+            WM_MOUSEMOVE = 0x0200,
+            WM_MOUSEWHEEL = 0x020A,
+            WM_RBUTTONDOWN = 0x0204,
+            WM_RBUTTONUP = 0x0205
         }
 
         // windows messages
@@ -299,6 +317,16 @@ namespace IllusionDragAndDrop.Shared
         {
             LBUTTON = 0x01,
             RBUTTON = 0x02,
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MSLLHOOKSTRUCT
+        {
+            public POINT pt;
+            public int mouseData; // be careful, this must be ints, not uints (was wrong before I changed it...). regards, cmew.
+            public int flags;
+            public int time;
+            public UIntPtr dwExtraInfo;
         }
 
         // WH_CALLWNDPROC
