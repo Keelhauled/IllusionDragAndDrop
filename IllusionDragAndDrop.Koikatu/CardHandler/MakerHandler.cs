@@ -1,9 +1,7 @@
 ﻿using B83.Win32;
-using BepInEx;
 using ChaCustom;
-using Harmony;
 using Manager;
-using System;
+using MessagePack;
 using System.Linq;
 using UnityEngine;
 
@@ -11,41 +9,58 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
 {
     public class MakerHandler : CardHandlerMethods
     {
-        public override bool Condition => Scene.Instance && Scene.Instance.NowSceneNames.Any(x => x == "CustomScene") && Paths.ProcessName == "Koikatu";
+        public override bool Condition => Scene.Instance && Scene.Instance.NowSceneNames.Any(x => x == "CustomScene");
 
         public override void Character_Load(string path, POINT pos, byte sex)
         {
-            var customCharaFile = GameObject.FindObjectOfType<CustomCharaFile>();
-            var traverse = Traverse.Create(customCharaFile);
-            var fileWindow = traverse.Field("fileWindow").GetValue<CustomFileWindow>();
-            var listCtrl = traverse.Field("listCtrl").GetValue<CustomFileListCtrl>();
+            var cfw = GameObject.FindObjectsOfType<CustomFileWindow>().FirstOrDefault(x => x.fwType == CustomFileWindow.FileWindowType.CharaLoad);
+            var loadFace = true;
+            var loadBody = true;
+            var loadHair = true;
+            var parameter = true;
+            var loadCoord = true;
 
-            var index = listCtrl.GetInclusiveCount() + 1;
-            listCtrl.AddList(index, "", "", "", path, "", new DateTime());
-            listCtrl.Create(customCharaFile.OnChangeSelect);
-            listCtrl.SelectItem(index);
-            fileWindow.btnChaLoadLoad.onClick.Invoke();
-            listCtrl.RemoveList(index);
-            listCtrl.Create(customCharaFile.OnChangeSelect);
+            if(cfw)
+            {
+                loadFace = cfw.tglChaLoadFace && cfw.tglChaLoadFace.isOn;
+                loadBody = cfw.tglChaLoadBody && cfw.tglChaLoadBody.isOn;
+                loadHair = cfw.tglChaLoadHair && cfw.tglChaLoadHair.isOn;
+                parameter = cfw.tglChaLoadParam && cfw.tglChaLoadParam.isOn;
+                loadCoord = cfw.tglChaLoadCoorde && cfw.tglChaLoadCoorde.isOn;
+            }
 
-            var customBase = CustomBase.Instance;
-            customBase.chaCtrl.chaFile.parameter.sex = (byte)customBase.modeSex;
+            var chaCtrl = CustomBase.Instance.chaCtrl;
+            chaCtrl.chaFile.LoadFileLimited(path, chaCtrl.sex, loadFace, loadBody, loadHair, parameter, loadCoord);
+            chaCtrl.ChangeCoordinateType(true);
+            chaCtrl.Reload(!loadCoord, !loadFace && !loadCoord, !loadHair, !loadBody);
+            CustomBase.Instance.updateCustomUI = true;
         }
 
         public override void Coordinate_Load(string path, POINT pos)
         {
-            var customCoordinateFile = GameObject.FindObjectOfType<CustomCoordinateFile>();
-            var traverse = Traverse.Create(customCoordinateFile);
-            var fileWindow = traverse.Field("fileWindow").GetValue<CustomFileWindow>();
-            var listCtrl = traverse.Field("listCtrl").GetValue<CustomFileListCtrl>();
+            var cfw = GameObject.FindObjectsOfType<CustomFileWindow>().FirstOrDefault(x => x.fwType == CustomFileWindow.FileWindowType.CoordinateLoad);
+            var loadClothes = true;
+            var loadAcs = true;
 
-            var index = listCtrl.GetInclusiveCount() + 1;
-            listCtrl.AddList(index, "", "", "", path, "", new DateTime());
-            listCtrl.Create(customCoordinateFile.OnChangeSelect);
-            listCtrl.SelectItem(index);
-            fileWindow.btnCoordeLoadLoad.onClick.Invoke();
-            listCtrl.RemoveList(index);
-            listCtrl.Create(customCoordinateFile.OnChangeSelect);
+            if(cfw)
+            {
+                loadClothes = cfw.tglCoordeLoadClothes && cfw.tglCoordeLoadClothes.isOn;
+                loadAcs = cfw.tglCoordeLoadAcs && cfw.tglCoordeLoadAcs.isOn;
+            }
+
+            var chaCtrl = CustomBase.Instance.chaCtrl;
+            var bytes = MessagePackSerializer.Serialize(chaCtrl.nowCoordinate.clothes);
+            var bytes2 = MessagePackSerializer.Serialize(chaCtrl.nowCoordinate.accessory);
+            chaCtrl.nowCoordinate.LoadFile(path);
+
+            if(!loadClothes)
+                chaCtrl.nowCoordinate.clothes = MessagePackSerializer.Deserialize<ChaFileClothes>(bytes);
+            if(!loadAcs)
+                chaCtrl.nowCoordinate.accessory = MessagePackSerializer.Deserialize<ChaFileAccessory>(bytes2);
+
+            chaCtrl.Reload(false, true, true, true);
+            chaCtrl.AssignCoordinate((ChaFileDefine.CoordinateType)chaCtrl.chaFile.status.coordinateType);
+            CustomBase.Instance.updateCustomUI = true;
         }
     }
 }

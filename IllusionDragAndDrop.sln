@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IllusionDragAndDrop.Koikatu
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "IllusionDragAndDrop.Shared", "IllusionDragAndDrop.Shared\IllusionDragAndDrop.Shared.shproj", "{DD4FE119-024D-40C6-91DD-EE4BC84B4BB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IllusionDragAndDrop.KoikatuParty", "IllusionDragAndDrop.KoikatuParty\IllusionDragAndDrop.KoikatuParty.csproj", "{A1866225-CD38-47CB-B5CC-62A0F03A13B6}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		IllusionDragAndDrop.Shared\IllusionDragAndDrop.Shared.projitems*{2b68bb81-821e-45b4-b89c-3ac907d1881e}*SharedItemsImports = 4
@@ -23,10 +21,6 @@ Global
 		{2B68BB81-821E-45B4-B89C-3AC907D1881E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B68BB81-821E-45B4-B89C-3AC907D1881E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B68BB81-821E-45B4-B89C-3AC907D1881E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1866225-CD38-47CB-B5CC-62A0F03A13B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1866225-CD38-47CB-B5CC-62A0F03A13B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1866225-CD38-47CB-B5CC-62A0F03A13B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1866225-CD38-47CB-B5CC-62A0F03A13B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
