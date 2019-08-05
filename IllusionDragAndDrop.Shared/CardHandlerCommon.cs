@@ -24,7 +24,7 @@ namespace IllusionDragAndDrop.Shared
             }
 
             var mainType = typeof(T);
-            var inheritingTypes = AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetTypes()).SelectMany(x => x).Where(x => x.IsSubclassOf(mainType));
+            var inheritingTypes = mainType.Assembly.GetTypes().Where(x => x.IsSubclassOf(mainType));
 
             foreach(var type in inheritingTypes)
             {
