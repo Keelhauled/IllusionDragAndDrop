@@ -21,7 +21,7 @@ namespace IllusionDragAndDrop.Koikatu
         static readonly byte[] StudioToken = Encoding.UTF8.GetBytes("【KStudio】");
         static readonly byte[] CharaToken = Encoding.UTF8.GetBytes("【KoiKatuChara");
         static readonly byte[] SexToken = Encoding.UTF8.GetBytes("sex");
-        static readonly byte[] CoordinateToken = Encoding.UTF8.GetBytes("【KoiKatuClothes");
+        static readonly byte[] CoordinateToken = Encoding.UTF8.GetBytes("【KoiKatuClothes】");
         static readonly byte[] PoseToken = Encoding.UTF8.GetBytes("【pose】");
 
         UnityDragAndDropHook hook;

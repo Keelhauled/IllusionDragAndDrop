@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="CardHandler\CardHandlerMethods.cs" />
     <Compile Include="CardHandler\FreeHSelectHandler.cs" />
+    <Compile Include="CardHandler\LiveHandler.cs" />
     <Compile Include="CardHandler\MakerHandler.cs" />
     <Compile Include="CardHandler\StudioHandler.cs" />
     <Compile Include="DragAndDrop.cs" />
