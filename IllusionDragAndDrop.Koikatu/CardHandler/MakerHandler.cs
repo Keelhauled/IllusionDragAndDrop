@@ -1,9 +1,13 @@
 ﻿using B83.Win32;
+using BepInEx.Logging;
 using ChaCustom;
 using Manager;
 using MessagePack;
+using System;
+using System.IO;
 using System.Linq;
 using UnityEngine;
+using Logger = BepInEx.Logger;
 
 namespace IllusionDragAndDrop.Koikatu.CardHandler
 {
@@ -30,7 +34,18 @@ namespace IllusionDragAndDrop.Koikatu.CardHandler
             }
 
             var chaCtrl = CustomBase.Instance.chaCtrl;
+            var originalSex = chaCtrl.sex;
+
             chaCtrl.chaFile.LoadFileLimited(path, chaCtrl.sex, loadFace, loadBody, loadHair, parameter, loadCoord);
+            if(chaCtrl.chaFile.GetLastErrorCode() != 0)
+                throw new Exception("LoadFileLimited failed");
+
+            if(chaCtrl.chaFile.parameter.sex != originalSex)
+            {
+                chaCtrl.chaFile.parameter.sex = originalSex;
+                Logger.Log(LogLevel.Message, "Warning: The character's sex has been changed to match the editor mode.");
+            }
+
             chaCtrl.ChangeCoordinateType(true);
             chaCtrl.Reload(!loadCoord, !loadFace && !loadCoord, !loadHair, !loadBody);
             CustomBase.Instance.updateCustomUI = true;
